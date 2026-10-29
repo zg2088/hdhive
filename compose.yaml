@@ -1,0 +1,47 @@
+# Installer only: the owner delivers the licensed image out of band.
+# No build context, registry fallback, application code or web bind mount.
+x-runtime: &runtime
+  image: hdhive-official:licensed
+  pull_policy: never
+  # Invalid/expired licenses must not create an automatic restart loop.
+  restart: "no"
+  init: true
+  working_dir: /app/app
+  # Fixed argv wrapper: no shell expansion; private runtime files incl. activation.
+  entrypoint: ["python", "-c", "import os,sys; os.umask(0o077); os.execvp(sys.argv[1], sys.argv[1:])"]
+  environment:
+    TZ: ${TZ:-Asia/Shanghai}
+    PYTHONDONTWRITEBYTECODE: "1"
+    PYTHONUNBUFFERED: "1"
+  security_opt:
+    - no-new-privileges:true
+  cap_drop:
+    - ALL
+  volumes:
+    - type: bind
+      source: ./app/data
+      target: /app/app/data
+      bind:
+        create_host_path: false
+  logging:
+    driver: json-file
+    options:
+      max-size: "10m"
+      max-file: "3"
+
+services:
+  bot:
+    <<: *runtime
+    command: ["python", "-m", "hdhive_license.supervisor", "run", "bot"]
+
+  api:
+    <<: *runtime
+    # The owner image supplies web assets and the single-worker API supervisor.
+    command: ["python", "-m", "hdhive_license.supervisor", "run", "api"]
+    ports:
+      - "127.0.0.1:${API_PORT:-8787}:8787"
+
+  listener:
+    <<: *runtime
+    profiles: ["listener"]
+    command: ["python", "-m", "hdhive_license.supervisor", "run", "listener"]

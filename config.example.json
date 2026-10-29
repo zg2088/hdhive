@@ -1,0 +1,22 @@
+{
+  "ADMIN_ID": 0,
+  "BOT_TOKEN": "",
+  "TG_API_ID": "",
+  "TG_API_HASH": "",
+  "TG_PHONE": "",
+  "TG_SESSION_NAME": "hdhive_user",
+  "WEB_USERNAME": "admin",
+  "WEB_PASSWORD": "",
+  "HDHIVE_CLIENT_ID": "",
+  "HDHIVE_CLIENT_SECRET": "",
+  "HDHIVE_API_KEY": "",
+  "HDHIVE_API_BASE": "https://hdhive.com/api/open",
+  "HDHIVE_REDIRECT_URI": "https://localhost:8443/callback",
+  "HDHIVE_WEBHOOK_SECRET": "",
+  "HDHIVE_AUTH_MODE": "oauth",
+  "UNLOCK_SAFE_MODE": true,
+  "PREMIUM_FREE_NEED_APPROVAL": true,
+  "AUTO_CHECKIN": false,
+  "AI_ENABLE": false,
+  "forward_rules": []
+}
